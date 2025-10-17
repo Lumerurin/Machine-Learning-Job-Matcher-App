@@ -4,7 +4,11 @@ import pickle
 import json
 from sklearn.metrics.pairwise import cosine_similarity
 
-print("Loading encoders and data...")
+print("="*60)
+print("RETRAINING MODEL WITH CURRENT KERAS VERSION")
+print("="*60)
+
+print("\nLoading encoders and data...")
 
 # Load encoders
 with open('mlb.pkl', 'rb') as f:
@@ -100,6 +104,6 @@ prediction = model.predict(test_input, verbose=0)
 print(f"\nTest prediction: {prediction[0][0]:.2f}/5.0")
 
 print("\n" + "="*60)
-print("SUCCESS! Model trained and saved.")
+print("SUCCESS! Model retrained and saved.")
 print("Now run: python app.py")
 print("="*60)
