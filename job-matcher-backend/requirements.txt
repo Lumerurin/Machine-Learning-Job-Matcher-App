@@ -2,9 +2,16 @@ flask==3.0.0
 flask-cors==4.0.0
 tensorflow==2.15.0
 tf-keras==2.15.0
-numpy==1.24.3
+numpy==1.26.4
 scikit-learn==1.4.2
 sentence-transformers==2.2.2
 pandas==2.0.3
 huggingface-hub==0.17.3
 transformers==4.35.0
+safetensors==0.6.2
+torch==2.0.1
+torchvision==0.15.2
+tqdm==4.67.1
+sentencepiece==0.2.1
+regex==2025.9.18
+protobuf==4.25.8
