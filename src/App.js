@@ -172,7 +172,7 @@ const JobMatcher = () => {
           <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-8">
             <div className="flex items-center gap-3 mb-2">
               <Briefcase size={32} />
-              <h1 className="text-3xl font-bold">AI Job Match Predictor</h1>
+              <h1 className="text-3xl font-bold">IntelliRank: AI Candidate Evaluator</h1>
             </div>
             <p className="text-blue-100">Advanced candidate-job compatibility analysis with interview evaluation</p>
           </div>
@@ -326,7 +326,7 @@ const JobMatcher = () => {
                         <MessageSquare size={24} className="text-white" />
                       </div>
                       <div>
-                        <h2 className="text-xl font-bold text-gray-800">Interview Responses</h2>
+                        <h2 className="text-xl font-bold text-gray-800">Interview Responses for Software Developer</h2>
                         <p className="text-sm text-gray-600">
                           {interviewQuestions.length > 0 
                             ? `Add responses to ${interviewQuestions.length} questions for better accuracy` 
