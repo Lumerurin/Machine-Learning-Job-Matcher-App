@@ -27,7 +27,8 @@ This project is a web application for matching job candidates to roles using mac
 	```
 2. Start the Flask API:
 	```bash
-	python job-matcher-backend/app.py
+	cd job-matcher-backend
+	python app.py
 	```
 
 ## Features
