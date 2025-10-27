@@ -24,6 +24,7 @@ import pickle
 import json
 import os
 from sklearn.metrics.pairwise import cosine_similarity
+from experience_utils import compute_experience_match
 
 # Import SBERT components (will be set to None if not available)
 try:
@@ -267,10 +268,16 @@ def predict_match():
             target_job_features + 1e-5
         )[0][0]
         
+        # New rule at inference: ignore job experience and use candidate seniority only.
+        # This ensures we score more senior candidates higher regardless of job-level in dataset.
         num_experience_levels = len(le_dict['experience_level'].classes_)
-        experience_match_score = 1.0 - abs(
-            sample_experience_encoded - target_job_experience_encoded
-        ) / num_experience_levels
+        # Use combined mode so entry-level candidates still have a chance. We give
+        # equal weight to candidate seniority and job-fit by default (candidate_weight=0.5).
+        experience_match_score = compute_experience_match(sample_experience_encoded,
+                                                          target_job_experience_encoded,
+                                                          num_experience_levels,
+                                                          mode='combined',
+                                                          candidate_weight=0.5)
         
         # Predict
         model_input = np.array([[skill_qual_similarity, experience_match_score]])
@@ -432,10 +439,13 @@ def predict_combined():
             target_job_features + 1e-5
         )[0][0]
         
+        # New rule at inference: experience match based solely on candidate seniority
         num_experience_levels = len(le_dict['experience_level'].classes_)
-        experience_match_score = 1.0 - abs(
-            sample_experience_encoded - target_job_experience_encoded
-        ) / num_experience_levels
+        experience_match_score = compute_experience_match(sample_experience_encoded,
+                                                          target_job_experience_encoded,
+                                                          num_experience_levels,
+                                                          mode='combined',
+                                                          candidate_weight=0.5)
         
         model_input = np.array([[skill_qual_similarity, experience_match_score]])
         structured_score = float(model.predict(model_input, verbose=0)[0][0])

@@ -3,6 +3,7 @@ import numpy as np
 import pickle
 import json
 from sklearn.metrics.pairwise import cosine_similarity
+from experience_utils import compute_experience_match
 
 print("="*60)
 print("RETRAINING MODEL WITH CURRENT KERAS VERSION")
@@ -57,10 +58,23 @@ for _ in range(500):
     
     # Calculate similarity scores
     skill_sim = cosine_similarity(candidate_features + 1e-5, job_features + 1e-5)[0][0]
-    exp_match = 1.0 - abs(candidate_exp_encoded - job_exp_encoded) / len(le_dict['experience_level'].classes_)
+
+    # Compute experience match with a balanced strategy that mixes candidate seniority
+    # and job-fit. This helps entry-level candidates keep a chance while still
+    # preferring more senior candidates when appropriate.
+    num_levels = len(le_dict['experience_level'].classes_)
+    # candidate_weight controls influence of candidate seniority (0..1). Lower
+    # values favor job-fit more; higher values favor candidate seniority.
+    exp_match = compute_experience_match(candidate_exp_encoded,
+                                         job_exp_encoded,
+                                         num_levels,
+                                         mode='combined',
+                                         candidate_weight=0.5)
     
     # Generate target score (weighted combination with noise)
-    target_score = (0.6 * skill_sim + 0.4 * exp_match) * 5
+    # Increase experience influence slightly (was 0.4) to give experience a bit more
+    # importance when generating targets. New split: 0.5 skill, 0.5 experience.
+    target_score = (0.5 * skill_sim + 0.5 * exp_match) * 5
     target_score += np.random.normal(0, 0.3)
     target_score = np.clip(target_score, 1, 5)
     
