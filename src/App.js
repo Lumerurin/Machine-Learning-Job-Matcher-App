@@ -134,8 +134,9 @@ const JobMatcher = () => {
 
   const getScoreColor = (score, maxScore = 5) => {
     const percentage = (score / maxScore) * 100;
-    if (percentage >= 75) return 'text-green-600';
-    if (percentage >= 50) return 'text-yellow-600';
+    // make 'Good Match' (>=60%) green as well; 'Fair' (>=40%) is yellow
+    if (percentage >= 60) return 'text-green-600';
+    if (percentage >= 40) return 'text-yellow-600';
     return 'text-red-600';
   };
 
@@ -446,8 +447,9 @@ const JobMatcher = () => {
                         <div className="w-full bg-gray-200 rounded-full h-3 mb-6">
                           <div
                             className={`h-3 rounded-full transition-all ${
-                              getScorePercentage(result.combined_score || result.match_score) >= 75 ? 'bg-green-500' :
-                              getScorePercentage(result.combined_score || result.match_score) >= 50 ? 'bg-yellow-500' : 'bg-red-500'
+                              // align progress bar colors with getScoreColor thresholds: >=60% green, >=40% yellow
+                              getScorePercentage(result.combined_score || result.match_score) >= 60 ? 'bg-green-500' :
+                              getScorePercentage(result.combined_score || result.match_score) >= 40 ? 'bg-yellow-500' : 'bg-red-500'
                             }`}
                             style={{ width: `${getScorePercentage(result.combined_score || result.match_score)}%` }}
                           ></div>

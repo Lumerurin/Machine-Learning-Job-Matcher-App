@@ -3,6 +3,7 @@ import numpy as np
 import pickle
 import json
 from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.metrics import mean_squared_error, r2_score
 from experience_utils import compute_experience_match
 
 print("="*60)
@@ -106,11 +107,22 @@ history = model.fit(
     verbose=0
 )
 
-print(f"✓ Training complete! Final MAE: {history.history['mae'][-1]:.4f}")
+# Calculate final metrics
+y_pred = model.predict(X_train, verbose=0).flatten()
+final_mae = history.history['mae'][-1]
+final_mse = mean_squared_error(y_train, y_pred)
+final_rmse = np.sqrt(final_mse)
+final_r2 = r2_score(y_train, y_pred)
+
+print("\nFinal Model Metrics:")
+print(f"MAE:  {final_mae:.4f}")
+print(f"MSE:  {final_mse:.4f}")
+print(f"RMSE: {final_rmse:.4f}")
+print(f"R²:   {final_r2:.4f}")
 
 # Save model
 model.save('job_matcher_model.keras')
-print("✓ Model saved to 'job_matcher_model.keras'")
+print("\n✓ Model saved to 'job_matcher_model.keras'")
 
 # Test prediction
 test_input = np.array([[0.8, 0.9]])
